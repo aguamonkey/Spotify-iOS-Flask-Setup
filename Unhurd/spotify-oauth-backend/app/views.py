@@ -92,5 +92,29 @@ def refresh_spotify_token():
     # Return the new access token (and refresh token if provided) to the iOS app
     return jsonify(response.json())
 
+@app.route('/api/token', methods=['POST'])
+def api_token():
+    code = request.form.get('code')
+    if not code:
+        return jsonify({'error': 'Authorization code not received'}), 400
+    
+    token_url = 'https://accounts.spotify.com/api/token'
+    token_data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': LOCAL_REDIRECT_URI,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+    }
+    r = requests.post(token_url, data=token_data, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    
+    if r.status_code != 200:
+        return jsonify(r.json()), r.status_code
+    
+    token_info = r.json()
+    # Store token info in session or handle accordingly
+    return jsonify(token_info)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
