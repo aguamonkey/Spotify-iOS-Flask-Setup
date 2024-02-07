@@ -66,29 +66,55 @@ def callback():
     session['token_expires_at'] = datetime.now() + timedelta(seconds=token_info.get('expires_in'))
     return jsonify(token_info)
 
-def refresh_access_token():
-    refresh_token = session.get('refresh_token')
-    if refresh_token:
-        token_url = 'https://accounts.spotify.com/api/token'
-        token_data = {
-            'grant_type': 'refresh_token',
-            'refresh_token': refresh_token,
-            'client_id': CLIENT_ID,
-            'client_secret': CLIENT_SECRET,
-        }
-        r = requests.post(token_url, data=token_data, headers={'Content-Type': 'application/x-www-form-urlencoded'})
-        if r.status_code == 200:
-            token_info = r.json()
-            session['access_token'] = token_info.get('access_token')
-            session['token_expires_at'] = datetime.now() + timedelta(seconds=token_info.get('expires_in'))
-            return True
-    return False
+@app.route('/api/spotify/refresh_token', methods=['POST'])
+def refresh_spotify_token():
+    # Extract the refresh token from the request
+    refresh_token = request.json.get('refresh_token')
+    if not refresh_token:
+        return jsonify({"error": "Missing refresh token"}), 400
 
-@app.before_request
-def before_request():
-    """Refresh access token automatically before each request if needed."""
-    if session.get('access_token') and datetime.now() >= session.get('token_expires_at', datetime.now()):
-        refresh_access_token()
+    # Prepare the request to Spotify's token endpoint
+    token_url = "https://accounts.spotify.com/api/token"
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    payload = {
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+    }
+
+    # Send the request to Spotify
+    response = requests.post(token_url, headers=headers, data=payload)
+    if response.status_code != 200:
+        # Handle error from Spotify
+        return jsonify(response.json()), response.status_code
+
+    # Return the new access token (and refresh token if provided) to the iOS app
+    return jsonify(response.json())
+
+@app.route('/api/token', methods=['POST'])
+def api_token():
+    code = request.form.get('code')
+    if not code:
+        return jsonify({'error': 'Authorization code not received'}), 400
+    
+    token_url = 'https://accounts.spotify.com/api/token'
+    token_data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': LOCAL_REDIRECT_URI,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+    }
+    r = requests.post(token_url, data=token_data, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    
+    if r.status_code != 200:
+        return jsonify(r.json()), r.status_code
+    
+    token_info = r.json()
+    # Store token info in session or handle accordingly
+    return jsonify(token_info)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
