@@ -12,10 +12,9 @@ This guide focuses on setting up the server component of the Spotify OAuth integ
 
 ### 1. Clone the Project Repository
 
-First, clone the project repository to your local machine:
+First, clone the project repository to your local machine then cd into it:
 
 ```shell
-git clone https://github.com/your-repository/spotify-oauth-example.git
 cd spotify-oauth-example
 ```
 
@@ -40,6 +39,11 @@ Install the necessary Python packages from `requirements.txt`:
 ```shell
 pip install -r requirements.txt
 ```
+
+### 4. Spotify Dashboard setup
+
+You will have to go to the spotify website to create an account and setup your application. You will need to do this step to move onto the next one.
+Official Spotify API at https://developer.spotify.com/documentation/web-api 
 
 ### 4. Environment Configuration
 
