@@ -48,7 +48,7 @@ Before you can interact with the Spotify API, you need to set up an application 
 2. Log in with your Spotify account or create one if you don't have it.
 3. Click **Create an App** and follow the instructions to set up your application.
 4. Once your app is created, note the `Client ID` and `Client Secret` provided.
-5. Add your `redirect_uri` (e.g., `http://127.0.0.1:5000/callback`) in the app settings under **Edit Settings > Redirect URIs**.
+5. Add your `redirect_uri` (e.g., `http://127.0.0.1:5000/callback`) in the app settings under **Edit Settings > Redirect URIs**. We used unhurdspotifysearch as seen in our info.plist for the redirect integration.
 
 ### 5. Environment Configuration
 
