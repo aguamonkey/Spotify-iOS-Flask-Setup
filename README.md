@@ -15,7 +15,7 @@ This guide focuses on setting up the server component of the Spotify OAuth integ
 First, clone the project repository to your local machine then cd into it:
 
 ```shell
-cd Python- spotify-oauth-backend
+cd Python-\ spotify-oauth-backend
 ```
 
 ### 2. Virtual Environment Setup
