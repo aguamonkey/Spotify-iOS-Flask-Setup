@@ -40,12 +40,17 @@ Install the necessary Python packages from `requirements.txt`:
 pip install -r requirements.txt
 ```
 
-### 4. Spotify Dashboard setup
+### 4. Spotify Dashboard Setup
 
-You will have to go to the spotify website to create an account and setup your application. You will need to do this step to move onto the next one.
-Official Spotify API at https://developer.spotify.com/documentation/web-api 
+Before you can interact with the Spotify API, you need to set up an application on the Spotify Developer Dashboard:
 
-### 4. Environment Configuration
+1. Visit the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
+2. Log in with your Spotify account or create one if you don't have it.
+3. Click **Create an App** and follow the instructions to set up your application.
+4. Once your app is created, note the `Client ID` and `Client Secret` provided.
+5. Add your `redirect_uri` (e.g., `http://127.0.0.1:5000/callback`) in the app settings under **Edit Settings > Redirect URIs**.
+
+### 5. Environment Configuration
 
 Create a `.env` file in your project root with the following variables:
 
@@ -55,6 +60,10 @@ SPOTIFY_CLIENT_ID=your_spotify_client_id_here
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret_here
 LOCAL_REDIRECT_URI=http://127.0.0.1:5000/callback # Use your actual redirect URI
 ```
+
+- **FLASK_SECRET_KEY**: This key is used by Flask to sign session cookies for protection against cookie data tampering. Generate a strong secret key using a random string with a combination of letters, digits, and symbols. You can use an online generator or run a Python command like `os.urandom(24)` to generate one.
+
+Ensure you replace placeholder values with your actual Spotify credentials and desired redirect URI.
 
 ### Running the Server
 
